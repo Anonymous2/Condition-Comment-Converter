@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+//using MySql.Data.MySqlClient;
+using Nito.AsyncEx;
 
 namespace Condition_Comment_Converter
 {
@@ -13,6 +15,11 @@ namespace Condition_Comment_Converter
         private static int totalSkippedScripts, totalLoadedScripts;
 
         static void Main(string[] args)
+        {
+            AsyncContext.Run(() => MainAsync(args));
+        }
+
+        static async void MainAsync(string[] args)
         {
             FillConditionStrings();
 
