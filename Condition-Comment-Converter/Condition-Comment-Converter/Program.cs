@@ -43,6 +43,38 @@ namespace Condition_Comment_Converter
 
             Console.WriteLine("\nConnecting...\n");
 
+            string allUpdateQueries = String.Empty, allUpdateQueriesWithErrors = String.Empty;
+
+            WorldDatabase worldDatabase = new WorldDatabase(host, port, user, pass, worldDB);
+
+            if (!worldDatabase.CanConnectToDatabase(worldDatabase.connectionString))
+            {
+                Console.WriteLine("\nA database connection could not be established with the given database information. Press any key to try again with new information.\n");
+                Console.ReadKey();
+                goto WriteSqlInformation;
+            }
+
+            List<Condition> conditions = await worldDatabase.GetConditions();
+
+            if (conditions.Count <= 0)
+            {
+                Console.WriteLine("\nNo conditions were found in the database. Press any key to try again with new database information.\n");
+                Console.ReadKey();
+                goto WriteSqlInformation;
+            }
+
+            Console.WriteLine("\nA database connection has been successfully established with the given database information. A total of " + conditions.Count + " scripts were found to be converted to proper commenting.\nPress any key to start the process!\n\n");
+            Console.ReadKey();
+
+            File.Delete("output.sql");
+
+            for (int i = 0; i < conditions.Count; ++i)
+            {
+                Condition condition = conditions[i];
+                totalLoadedScripts++;
+                string fullLine = String.Empty;
+            }
+
             Console.WriteLine("\n\n\nThe converting has finished. A total of {0} scripts were loaded of which {1} were skipped because their comments already fit the correct codestyle.", totalLoadedScripts, totalSkippedScripts);
             Console.WriteLine("If you wish to open the output file with your selected .sql file editor, press the Enter key.");
 
