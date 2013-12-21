@@ -133,5 +133,41 @@ namespace Condition_Comment_Converter
 
             return dt.Rows[0]["name"].ToString();
         }
+
+        public async Task<List<Condition>> GetConditions()
+        {
+            DataTable dt = await ExecuteQuery("SELECT * FROM conditions");
+
+            if (dt.Rows.Count == 0)
+                return null;
+
+            List<Condition> conditions = new List<Condition>();
+
+            foreach (DataRow row in dt.Rows)
+                conditions.Add(BuildCondition(row));
+
+            return conditions;
+        }
+
+        private static Condition BuildCondition(DataRow row)
+        {
+            var condition = new Condition();
+            condition.SourceTypeOrReferenceId = row["SourceTypeOrReferenceId"] != DBNull.Value ? Convert.ToInt32(row["SourceTypeOrReferenceId"]) : 0;
+            condition.SourceGroup = row["SourceGroup"] != DBNull.Value ? Convert.ToInt32(row["SourceGroup"]) : 0;
+            condition.SourceEntry = row["SourceEntry"] != DBNull.Value ? Convert.ToInt32(row["SourceEntry"]) : 0;
+            condition.SourceId = row["SourceId"] != DBNull.Value ? Convert.ToInt32(row["SourceId"]) : 0;
+            condition.ElseGroup = row["ElseGroup"] != DBNull.Value ? Convert.ToInt32(row["ElseGroup"]) : 0;
+            condition.ConditionTypeOrReference = row["ConditionTypeOrReference"] != DBNull.Value ? Convert.ToInt32(row["ConditionTypeOrReference"]) : 0;
+            condition.ConditionTarget = row["ConditionTarget"] != DBNull.Value ? Convert.ToInt32(row["ConditionTarget"]) : 0;
+            condition.ConditionValue1 = row["ConditionValue1"] != DBNull.Value ? Convert.ToInt32(row["ConditionValue1"]) : 0;
+            condition.ConditionValue2 = row["ConditionValue2"] != DBNull.Value ? Convert.ToInt32(row["ConditionValue2"]) : 0;
+            condition.ConditionValue3 = row["ConditionValue3"] != DBNull.Value ? Convert.ToInt32(row["ConditionValue3"]) : 0;
+            condition.NegativeCondition = row["NegativeCondition"] != DBNull.Value ? Convert.ToInt32(row["NegativeCondition"]) : 0;
+            condition.ErrorType = row["ErrorType"] != DBNull.Value ? Convert.ToInt32(row["ErrorType"]) : 0;
+            condition.ErrorTextId = row["ErrorTextId"] != DBNull.Value ? Convert.ToInt32(row["ErrorTextId"]) : 0;
+            condition.ScriptName = row["ScriptName"] != DBNull.Value ? (string)row["ScriptName"] : String.Empty;
+            condition.Comment = row["Comment"] != DBNull.Value ? (string)row["Comment"] : String.Empty;
+            return condition;
+        }
     }
 }
